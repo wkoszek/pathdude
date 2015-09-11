@@ -28,6 +28,11 @@ ARGF.each do |line|
 	g_files += chunks_raw.select{ |f| File.exists?(f) }
 end
 
+if g_config["header"] then
+	g_config["header"].each do |hdr|
+		print "# " + hdr + "\n"
+	end
+end
 g_config["commands"].each do |template|
 	print "# #{template} {{{ \n"
 	g_files.each do |fn|
