@@ -2,20 +2,35 @@
 
 require 'yaml'
 
-G_templates = [
-		"git add",
-		"git rm -rf"
-]
+HOME = ENV['HOME']
+if not HOME then
+	print "$HOME unknown. You must have it set\n"
+	exit 1
+end
+CFG = HOME + "/.pathdude.yml"
 
-files = []
-ARGF.each do |line|
-	chunks_raw = line.scan(/\w+/)
-	files += chunks_raw.select{ |f| File.exists?(f) }
+if not File.exists?(CFG) then
+	File.open(CFG, "w") do |f|
+		f.write("commands:\n")
+		f.write(" - git add\n")
+		f.write(" - git rm -rf\n")
+	end
 end
 
-G_templates.each do |template|
-	print "# {{{ \n"
-	files.each do |fn|
+g_config = []
+File.open(CFG, "r") do |f|
+	g_config = YAML.load(f.read())
+end
+
+g_files = []
+ARGF.each do |line|
+	chunks_raw = line.split(/[ \n\r\t]/)
+	g_files += chunks_raw.select{ |f| File.exists?(f) }
+end
+
+g_config["commands"].each do |template|
+	print "# #{template} {{{ \n"
+	g_files.each do |fn|
 		print "# #{template} #{fn}\n"
 	end
 	print "# }}} \n"
