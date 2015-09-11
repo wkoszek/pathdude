@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+
+require 'yaml'
+
+G_templates = [
+		"git add",
+		"git rm -rf"
+]
+
+files = []
+ARGF.each do |line|
+	chunks_raw = line.scan(/\w+/)
+	files += chunks_raw.select{ |f| File.exists?(f) }
+end
+
+G_templates.each do |template|
+	print "# {{{ \n"
+	files.each do |fn|
+		print "# #{template} #{fn}\n"
+	end
+	print "# }}} \n"
+end
