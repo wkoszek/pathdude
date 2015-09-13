@@ -9,6 +9,13 @@ if not HOME then
 end
 CFG = HOME + "/.pathdude.yml"
 
+only_abs = false
+ARGV.each do |arg|
+	if arg =~ /--only-absolute/ then
+		only_abs = true
+	end
+end
+
 if not File.exists?(CFG) then
 	File.open(CFG, "w") do |f|
 		f.write("commands:\n")
@@ -23,20 +30,29 @@ File.open(CFG, "r") do |f|
 end
 
 g_files = []
-ARGF.each do |line|
+while line = $stdin.gets
 	chunks_raw = line.split(/[ \n\r\t]/)
 	g_files += chunks_raw.select{ |f| File.exists?(f) }
 end
+
+print "# Path:\n"
+g_files.map! { |p| print "%s\n" % [File.realpath(p) ] }
+exit 0 if only_abs
 
 if g_config["header"] then
 	g_config["header"].each do |hdr|
 		print "# " + hdr + "\n"
 	end
 end
+
+fst = true
 g_config["commands"].each do |template|
-	print "# #{template} {{{ \n"
+	if not fst then
+		print "\n\n# }}}\n"
+	end
+	fst = false
+	print "# --------------- #{template} --------------------- {{{\n"
 	g_files.each do |fn|
 		print "# #{template} #{fn}\n"
 	end
-	print "# }}} \n"
 end
