@@ -35,15 +35,15 @@ while line = $stdin.gets
 	g_files += chunks_raw.select{ |f| File.exists?(f) }
 end
 
-print "# Path:\n"
-g_files.map! { |p| print "%s\n" % [File.realpath(p) ] }
-exit 0 if only_abs
-
 if g_config["header"] then
 	g_config["header"].each do |hdr|
 		print "# " + hdr + "\n"
 	end
 end
+
+print "# Path:\n"
+g_files.map! { |p| print "%s\n" % [File.realpath(p) ] }
+exit 0 if only_abs
 
 fst = true
 g_config["commands"].each do |template|
