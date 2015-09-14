@@ -1,0 +1,5 @@
+commands:
+- git add
+- git rm -rf
+header:
+- "vim: foldmethod=marker:"
