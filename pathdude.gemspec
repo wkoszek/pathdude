@@ -8,5 +8,6 @@ Gem::Specification.new do |s|
   s.homepage    = 'http://github.com/wkoszek/pathdude'
   s.files       = ["bin/pathdude"]
   s.executable	= "pathdude"
+  s.require_paths = ['.']
   s.license	= 'BSD'
 end
