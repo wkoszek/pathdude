@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'pathdude'
-  s.version     = '1.0.0'
+  s.version     = '1.0.1'
   s.summary     = "PathDude solves the problem of executing a command on multiple files"
   s.description = "Pipe output of a command to PathDude, edit it and execute in the shell"
   s.authors     = ["Wojciech A. Koszek"]
