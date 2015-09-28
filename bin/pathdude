@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'tempfile'
 require 'yaml'
 
 HOME = ENV['HOME']
@@ -35,24 +36,33 @@ while line = $stdin.gets
 	g_files += chunks_raw.select{ |f| File.exists?(f) }
 end
 
+fo = Tempfile.new('pathdude')
+fo.write "#!/bin/sh\n"
+fo.write "set -x\n"
 if g_config["header"] then
 	g_config["header"].each do |hdr|
-		print "# " + hdr + "\n"
+		fo.write "# " + hdr + "\n"
 	end
 end
 
-print "# Path:\n"
-g_files.each { |p| print "%s\n" % [File.realpath(p) ] }
+fo.write "# Path:\n"
+g_files.each { |p| fo.write "# %s\n" % [File.realpath(p) ] }
 exit 0 if only_abs
 
 fst = true
 g_config["commands"].each do |template|
 	if not fst then
-		print "\n\n# }}}\n"
+		fo.write "\n\n# }}}\n"
 	end
 	fst = false
-	print "# --------------- #{template} --------------------- {{{\n"
+	fo.write "# --------------- #{template} --------------------- {{{\n"
 	g_files.each do |fn|
-		print "# #{template} #{fn}\n"
+		fo.write "# #{template} #{fn}\n"
 	end
 end
+fo.close
+fork do
+	exec ENV['EDITOR'] + " #{fo.path} < /dev/tty"
+end
+Process.wait
+exec "/bin/sh #{fo.path}"
