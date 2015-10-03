@@ -57,7 +57,9 @@ g_config["commands"].each do |template|
 	fst = false
 	fo.write "# --------------- #{template} --------------------- {{{\n"
 	g_files.each do |fn|
-		fo.write "# #{template} #{fn}\n"
+		fo.write "# #{template} #{fn} # "
+		st = File.stat(fn)
+		fo.write(sprintf("sz=#{st.size} %o mtime=#{st.mtime}\n", st.mode))
 	end
 end
 fo.close
