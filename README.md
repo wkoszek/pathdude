@@ -55,3 +55,8 @@ My configuration file is pretty simple:
 
 
 TODO: Interactive mode
+
+# Author
+
+- Wojciech Adam Koszek, [wojciech@koszek.com](mailto:wojciech@koszek.com)
+- [http://www.koszek.com](http://www.koszek.com)
